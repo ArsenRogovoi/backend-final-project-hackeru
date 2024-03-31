@@ -1,19 +1,47 @@
 const express = require("express");
 const router = express.Router();
-const { handleError } = require("../../utils/errorHandler");
+const {
+  handleClientError,
+  handleServerError,
+} = require("../../utils/errorHandlers");
+const auth = require("../../auth/authService");
+const { validateLogin } = require("../../validation/validationService");
+const loginUser = require("../../db/userAccessData");
 
-router.get("/", async (req, res) => {
+// login endpoint
+router.post("/", async (req, res) => {
   try {
-    return res.send({ users: [{ username: "Arsen" }] });
+    const { error } = validateLogin(req.body);
+    if (error)
+      return handleClientError(
+        res,
+        400,
+        `Joi Error: ${error.details[0].message}`
+      );
+    const token = await loginUser(req.body);
+    return res.send(token);
   } catch (error) {
-    const { status } = error;
-    return handleError(res, status || 500, error.message);
+    handleServerError(error.message);
+    handleClientError(res);
   }
 });
 
-router.post("/", async (req, res) => {
+// login endpoint
+router.post("/login", async (req, res) => {
   try {
-  } catch (error) {}
+    const { error } = validateLogin(req.body);
+    if (error)
+      return handleClientError(
+        res,
+        400,
+        `Joi Error: ${error.details[0].message}`
+      );
+    const token = await loginUser(req.body);
+    return res.send(token);
+  } catch (error) {
+    handleServerError(error.message);
+    handleClientError(res);
+  }
 });
 
 module.exports = router;

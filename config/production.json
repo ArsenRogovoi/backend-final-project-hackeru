@@ -1,10 +1,11 @@
 {
-  "NODE_ENV": "production",
-  "SERVER_HOST": "",
-  "PORT": "",
-  "TOKEN_GENARATOR": "",
-  "DB": "",
+  "NODE_ENV": "development",
+  "SERVER_HOST": "http://localhost",
+  "PORT": 3500,
+  "TOKEN_GENERATOR": "jwt",
+  "DB": "mongoDB",
   "DB_NAME": "",
   "DB_PASSWORD": "",
-  "LOGGER": ""
+  "LOGGER": "morgan",
+  "VALIDATION": "joi"
 }

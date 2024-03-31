@@ -1,16 +1,17 @@
 const express = require("express");
 const app = express();
 const logger = require("./logger/loggerAdaptor");
-const { handleError } = require("./utils/errorHandler");
+const { handleClientError } = require("./utils/errorHandlers");
 const router = require("./router/router");
 const config = require("config");
 const connectToDB = require("./db/dbService");
 const chalk = require("chalk");
 
 app.use(logger);
+app.use(express.json());
 app.use(router);
 app.use((err, req, res, next) => {
-  handleError(res, 500, err.message);
+  handleClientError(res, 500, err.message);
 });
 
 const PORT = config.get("PORT");
