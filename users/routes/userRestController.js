@@ -5,13 +5,16 @@ const {
   handleServerError,
 } = require("../../utils/errorHandlers");
 const auth = require("../../auth/authService");
-const { validateLogin } = require("../../validation/validationService");
+const {
+  validateLogin,
+  validateRegistration,
+} = require("../../validation/validationService");
 const loginUser = require("../../db/userAccessData");
 
 // login endpoint
 router.post("/", async (req, res) => {
   try {
-    const { error } = validateLogin(req.body);
+    const { error } = validateRegistration(req.body);
     if (error)
       return handleClientError(
         res,
