@@ -1,0 +1,10 @@
+{
+  "NODE_ENV": "development",
+  "SERVER_HOST": "http://localhost",
+  "PORT": 3500,
+  "TOKEN_GENARATOR": "jwt",
+  "DB": "mongoDB",
+  "DB_NAME": "",
+  "DB_PASSWORD": "",
+  "LOGGER": "morgan"
+}

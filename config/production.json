@@ -1,0 +1,10 @@
+{
+  "NODE_ENV": "production",
+  "SERVER_HOST": "",
+  "PORT": "",
+  "TOKEN_GENARATOR": "",
+  "DB": "",
+  "DB_NAME": "",
+  "DB_PASSWORD": "",
+  "LOGGER": ""
+}
