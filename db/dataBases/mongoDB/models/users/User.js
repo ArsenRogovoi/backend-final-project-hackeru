@@ -27,8 +27,10 @@ const userSchema = new Schema(
       ),
       required: true,
     },
-    profilePicturePath: { type: String },
-    timezone: { type: String },
+    profilePicturePath: {
+      type: String,
+      default: "image place holder path!",
+    },
     isAdmin: {
       type: Boolean,
       default: false,
@@ -37,8 +39,8 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    favExperts: [String],
-    appointmentIds: [String],
+    favExperts: { type: [String], default: [] },
+    appointmentIds: { type: [String], default: [] },
   },
   { timestamps: true }
 );

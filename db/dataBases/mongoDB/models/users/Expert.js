@@ -7,11 +7,17 @@ const expertSchema = new Schema({
   bio: { type: String },
   rating: { type: Number },
   reviews: ["rev1", "rev2"],
-  contactPhone: { type: String, required: true },
+  contactPhone: {
+    type: String,
+    match: RegExp(
+      /(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/
+    ),
+    required: true,
+  },
   address: {
-    Country: { type: String, required: true },
-    City: { type: String, required: true },
-    Street: { type: String, required: true },
+    country: { type: String, required: true },
+    city: { type: String, required: true },
+    street: { type: String, required: true },
     houseNum: { type: Number, required: true },
   },
 });
