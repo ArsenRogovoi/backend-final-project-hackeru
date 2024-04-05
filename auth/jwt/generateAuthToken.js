@@ -2,10 +2,10 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const key = config.get("JWT_KEY");
 
-const generateAuthToken = (user) => {
+const generateAuthTokenJWT = (user) => {
   const { _id, isAdmin, isExpert } = user;
-  const token = jwt.sign({ _id, isAdmin, isExpert }, key);
+  const token = jwt.sign({ _id, isAdmin, isExpert }, key, { expiresIn: "1h" });
   return token;
 };
 
-module.exports = generateAuthToken;
+module.exports = generateAuthTokenJWT;

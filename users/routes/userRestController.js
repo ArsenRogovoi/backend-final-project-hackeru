@@ -33,8 +33,8 @@ router.post("/login", async (req, res) => {
     const token = await loginUser(req.body);
     return res.send(token);
   } catch (error) {
-    handleServerError(error.message);
-    handleClientError(res, 500, "Failed to log in");
+    handleServerError(error);
+    handleClientError(res, 500, error.message);
   }
 });
 

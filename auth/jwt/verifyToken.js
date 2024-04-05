@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const config = require("config");
 const key = config.get("JWT_KEY");
 
-const verifyToken = (tokenFromClient) => {
+const verifyTokenJWT = (tokenFromClient) => {
   try {
     const userData = jwt.verify(tokenFromClient, key);
     return userData;
@@ -10,4 +10,4 @@ const verifyToken = (tokenFromClient) => {
     return null;
   }
 };
-module.exports = verifyToken;
+module.exports = verifyTokenJWT;

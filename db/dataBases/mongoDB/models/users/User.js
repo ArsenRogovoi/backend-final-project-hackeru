@@ -42,7 +42,7 @@ const userSchema = new Schema(
     favExperts: { type: [String], default: [] },
     appointmentIds: { type: [String], default: [] },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "users" }
 );
 
 const User = mongoose.model("user", userSchema);
