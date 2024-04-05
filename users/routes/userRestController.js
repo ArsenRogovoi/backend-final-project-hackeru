@@ -9,41 +9,32 @@ const {
   validateLogin,
   validateRegistration,
 } = require("../../validation/validationService");
-const loginUser = require("../../db/userAccessData");
+const { loginUser, registerUser } = require("../../db/userAccessData");
+const chalk = require("chalk");
 
-// login endpoint
+// registrarion endpoint
 router.post("/", async (req, res) => {
   try {
-    const { error } = validateRegistration(req.body);
-    if (error)
-      return handleClientError(
-        res,
-        400,
-        `Joi Error: ${error.details[0].message}`
-      );
-    const token = await loginUser(req.body);
-    return res.send(token);
+    const error = validateRegistration(req.body);
+    if (error) return handleClientError(res, 400, `Validation Error: ${error}`);
+    const user = await registerUser(req.body);
+    return res.send(user);
   } catch (error) {
-    handleServerError(error.message);
-    handleClientError(res);
+    handleServerError(error);
+    handleClientError(res, 500, "Failed to save user in DB");
   }
 });
 
 // login endpoint
 router.post("/login", async (req, res) => {
   try {
-    const { error } = validateLogin(req.body);
-    if (error)
-      return handleClientError(
-        res,
-        400,
-        `Joi Error: ${error.details[0].message}`
-      );
+    const error = validateLogin(req.body);
+    if (error) return handleClientError(res, 400, `Validation Error: ${error}`);
     const token = await loginUser(req.body);
     return res.send(token);
   } catch (error) {
     handleServerError(error.message);
-    handleClientError(res);
+    handleClientError(res, 500, "Failed to log in");
   }
 });
 

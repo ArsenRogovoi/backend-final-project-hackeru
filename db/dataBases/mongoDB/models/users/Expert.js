@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const { userSchema } = require("./User");
 
@@ -6,12 +6,11 @@ const expertSchema = new Schema({
   specialization: { type: String, required: true },
   bio: { type: String },
   rating: { type: Number },
-  reviews: ["rev1", "rev2"],
+  reviews: { type: [String], default: ["rev1", "rev2"] },
   contactPhone: {
     type: String,
-    match: RegExp(
-      /(?:([+]\d{1,4})[-.\s]?)?(?:[(](\d{1,3})[)][-.\s]?)?(\d{1,4})[-.\s]?(\d{1,4})[-.\s]?(\d{1,9})/
-    ),
+    match:
+      /^\+?\d{1,4}?[-.\s]?(?:\(\d{1,3}\)|\d{1,3})[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
     required: true,
   },
   address: {

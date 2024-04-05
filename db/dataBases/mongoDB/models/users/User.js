@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema(
@@ -23,7 +23,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       match: RegExp(
-        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d{4,})(?=.*[!@#$%^&*\\-_*]).{8,}$/
+        /^(?=.*[A-Z])(?=.*[a-z])(?=(?:.*\d){4,})(?=.*[!@#$%^&*\-_]).{8,}$/
       ),
       required: true,
     },
@@ -47,5 +47,4 @@ const userSchema = new Schema(
 
 const User = mongoose.model("user", userSchema);
 
-module.exports = User;
-module.exports = userSchema;
+module.exports = { User, userSchema };

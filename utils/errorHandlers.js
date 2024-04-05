@@ -12,9 +12,8 @@ const handleClientError = (
 };
 
 const handleServerError = (error) => {
-  console.log(
-    `${chalk.bgRed("[ Server error handler ]:")} ${chalk.red(error)}`
-  );
+  console.log(`${chalk.bgRed("[ Server error handler ]:")}`);
+  console.log(error);
 };
 
 exports.handleClientError = handleClientError;

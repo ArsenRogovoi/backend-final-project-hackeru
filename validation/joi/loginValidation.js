@@ -21,8 +21,12 @@ const loginValidation = (user) => {
         "any.required": `"password" input is required`,
       }),
   });
-
-  return schema.validate(user);
+  const { error } = schema.validate(user);
+  if (error) {
+    return error.details[0].message;
+  } else {
+    return false;
+  }
 };
 
 module.exports = loginValidation;
