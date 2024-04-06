@@ -3,6 +3,8 @@ const DB = config.get("DB");
 const {
   loginUserMongo,
   registerUserMongo,
+  getUserMongo,
+  getUsersMongo,
 } = require("./dataBases/mongoDB/services/userService");
 const { handleServerError } = require("../utils/errorHandlers");
 
@@ -28,4 +30,26 @@ const registerUser = async (user) => {
   }
 };
 
-module.exports = { loginUser, registerUser };
+const getUser = async (id) => {
+  if (DB === "mongoDB") {
+    const user = await getUserMongo(id);
+    return user;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
+const getUsers = async () => {
+  if (DB === "mongoDB") {
+    const users = await getUsersMongo();
+    return users;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
+module.exports = { loginUser, registerUser, getUser, getUsers };
