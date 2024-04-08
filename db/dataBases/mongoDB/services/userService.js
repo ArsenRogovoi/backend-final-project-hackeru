@@ -46,6 +46,7 @@ const registerUserMongo = async (user) => {
 };
 
 //search user in 'users' collection. if user isn't in DB returns null.
+//for user owner or admin
 const getUserMongo = async (id) => {
   try {
     const user = await User.findById(id).select("-password -__v");
@@ -57,10 +58,22 @@ const getUserMongo = async (id) => {
 };
 
 //search user in 'users' collection. if user isn't in DB returns null.
+//for admin
 const getUsersMongo = async () => {
   try {
     const users = await User.find({}).select("-password -__v");
     return users;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getExpertsMongo = async () => {
+  try {
+    const experts = await User.find({ isExpert: true }).select(
+      "-password -__v -isAdmin -favExperts -appointmentIds -createdAt -updatedAt"
+    );
+    return experts;
   } catch (error) {
     throw error;
   }
@@ -71,4 +84,5 @@ module.exports = {
   registerUserMongo,
   getUserMongo,
   getUsersMongo,
+  getExpertsMongo,
 };

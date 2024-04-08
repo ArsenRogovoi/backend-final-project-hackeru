@@ -5,6 +5,7 @@ const {
   registerUserMongo,
   getUserMongo,
   getUsersMongo,
+  getExpertsMongo,
 } = require("./dataBases/mongoDB/services/userService");
 const { handleServerError } = require("../utils/errorHandlers");
 
@@ -56,4 +57,19 @@ const getUsers = async () => {
   }
 };
 
-module.exports = { loginUser, registerUser, getUser, getUsers };
+const getExperts = async () => {
+  if (DB === "mongoDB") {
+    try {
+      const experts = await getExpertsMongo();
+      return experts;
+    } catch (error) {
+      throw error;
+    }
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
+module.exports = { loginUser, registerUser, getUser, getUsers, getExperts };

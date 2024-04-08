@@ -43,7 +43,6 @@ db.on("error", (error) =>
 
 async function initializeData() {
   const usersInDB = await User.find();
-  console.log(usersInDB.length);
   if (usersInDB.length === 0) {
     for (const user of initialUsers) {
       await registerUserMongo(user);
