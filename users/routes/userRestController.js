@@ -72,12 +72,21 @@ router.get("/", auth, async (req, res) => {
         "The client does not have access rights to the content"
       );
     const users = await getUsers();
-    return users;
+    return res.send(users);
   } catch (error) {
     handleClientError(res, 500, "didn't success to get users from DB");
     handleServerError(error);
   }
 });
+
+//get experts
+// router.get("/experts", async (req, res) => {
+//   try {
+
+//   } catch (error) {
+
+//   }
+// });
 
 //edit user
 

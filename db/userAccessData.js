@@ -43,8 +43,12 @@ const getUser = async (id) => {
 
 const getUsers = async () => {
   if (DB === "mongoDB") {
-    const users = await getUsersMongo();
-    return users;
+    try {
+      const users = await getUsersMongo();
+      return users;
+    } catch (error) {
+      throw error;
+    }
   } else {
     handleServerError(
       "Currently only the MongoDB is supported. Please check your DB property in config files."

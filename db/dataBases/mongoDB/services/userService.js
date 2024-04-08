@@ -57,9 +57,9 @@ const getUserMongo = async (id) => {
 };
 
 //search user in 'users' collection. if user isn't in DB returns null.
-const getUsersMongo = async (id) => {
+const getUsersMongo = async () => {
   try {
-    const users = await User.findById(id).select("-password -__v");
+    const users = await User.find({}).select("-password -__v");
     return users;
   } catch (error) {
     throw error;

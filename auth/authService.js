@@ -14,8 +14,10 @@ const auth = (req, res, next) => {
       if (!token) return res.status(401).send("Access denied. Please Login.");
 
       const userInfo = verifyTokenJWT(token);
-      if (!userInfo)
+      if (!userInfo) {
+        console.log(userInfo);
         return res.status(401).send("Access denied. Unauthorized user.");
+      }
 
       req.user = userInfo;
       return next();
