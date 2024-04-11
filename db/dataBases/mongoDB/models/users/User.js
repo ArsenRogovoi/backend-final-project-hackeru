@@ -29,7 +29,7 @@ const userSchema = new Schema(
     },
     profilePicturePath: {
       type: String,
-      default: "image place holder path!",
+      default: "",
     },
     isAdmin: {
       type: Boolean,

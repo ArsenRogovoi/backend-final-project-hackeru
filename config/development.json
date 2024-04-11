@@ -7,5 +7,6 @@
   "DB_NAME": "",
   "DB_PASSWORD": "",
   "LOGGER": "morgan",
-  "VALIDATION": "joi"
+  "VALIDATION": "joi",
+  "CORS_ORIGIN": "*"
 }

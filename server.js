@@ -6,9 +6,17 @@ const router = require("./router/router");
 const config = require("config");
 const connectToDB = require("./db/dbService");
 const chalk = require("chalk");
+const cors = require("cors");
+const corsConfig = config.get("CORS_ORIGIN");
 
 app.use(logger);
 app.use(express.json());
+// it will be better if there will be some error handler for cors:
+app.use(
+  cors({
+    origin: corsConfig,
+  })
+);
 app.use(router);
 app.use((err, req, res, next) => {
   handleClientError(res, 500, err.message);
