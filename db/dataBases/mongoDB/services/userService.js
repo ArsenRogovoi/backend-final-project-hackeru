@@ -79,10 +79,22 @@ const getExpertsMongo = async () => {
   }
 };
 
+const getExpertMongo = async (id) => {
+  try {
+    const expert = await User.findOne({ isExpert: true, _id: id }).select(
+      "-password -__v -isAdmin -favExperts -appointmentIds -createdAt -updatedAt"
+    );
+    return expert;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   loginUserMongo,
   registerUserMongo,
   getUserMongo,
   getUsersMongo,
   getExpertsMongo,
+  getExpertMongo,
 };

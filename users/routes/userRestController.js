@@ -15,6 +15,7 @@ const {
   getUser,
   getUsers,
   getExperts,
+  getExpert,
 } = require("../../db/userAccessData");
 
 // registrarion endpoint
@@ -83,11 +84,22 @@ router.get("/", auth, async (req, res) => {
 //get experts for all users
 router.get("/experts", async (req, res) => {
   try {
-    console.log("in experts route");
     const experts = await getExperts();
     return res.send(experts);
   } catch (error) {
     handleClientError(res, 500, "didn't success to get experts from DB");
+    handleServerError(error);
+  }
+});
+
+//get expert for all users
+router.get("/experts/:id", async (req, res) => {
+  try {
+    const expertId = req.params.id;
+    const expert = await getExpert(expertId);
+    return res.send(expert);
+  } catch (error) {
+    handleClientError(res, 500, "didn't success to get expert from DB");
     handleServerError(error);
   }
 });
