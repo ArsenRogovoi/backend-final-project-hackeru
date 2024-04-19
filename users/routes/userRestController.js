@@ -17,6 +17,7 @@ const {
   getExperts,
   getExpert,
 } = require("../../db/userAccessData");
+const chalk = require("chalk");
 
 // registrarion endpoint
 router.post("/", async (req, res) => {
@@ -26,8 +27,13 @@ router.post("/", async (req, res) => {
     const user = await registerUser(req.body);
     return res.send(user);
   } catch (error) {
-    handleServerError(error);
-    handleClientError(res, 500, "Failed to save user in DB");
+    console.log(chalk.magenta(error.name));
+    if (error.name === "EmailAlreadyExistsError") {
+      handleClientError(res, 400, error.message);
+    } else {
+      handleServerError(error);
+      handleClientError(res, 500, "Failed to save user in DB");
+    }
   }
 });
 

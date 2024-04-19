@@ -29,7 +29,9 @@ const registerUserMongo = async (user) => {
     let userInDB = await Model.findOne({ email });
 
     if (userInDB) {
-      throw new Error(`Email ${email} already exists. Try to login.`);
+      const error = new Error(`Email ${email} already exists. Try to login.`);
+      error.name = "EmailAlreadyExistsError";
+      throw error;
     }
     userInDB = new Model(user);
     userInDB.password = await hashPassword(userInDB.password);
