@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 const { Appointment } = require("../models/appointments/Appointment");
 
 const createAppointmentMongo = async (appointment) => {
@@ -22,4 +23,23 @@ const createAppointmentMongo = async (appointment) => {
   }
 };
 
-module.exports = { createAppointmentMongo };
+const getAppointmentsOfMonthMongo = async (expertId, year, month) => {
+  try {
+    const startDate = dayjs().year(year).month(month).startOf("month").toDate();
+    const endDate = dayjs().year(year).month(month).endOf("month").toDate();
+
+    const appointments = await Appointment.find({
+      expertId: expertId,
+      startTime: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    });
+
+    return appointments;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { createAppointmentMongo, getAppointmentsOfMonthMongo };

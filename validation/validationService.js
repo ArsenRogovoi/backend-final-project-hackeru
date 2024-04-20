@@ -1,6 +1,7 @@
 const config = require("config");
 const loginValidation = require("./joi/loginValidation");
 const registerValidation = require("./joi/registerValidation");
+const appointmentValidation = require("./joi/appointmentValidation");
 
 const validator = config.get("VALIDATION") || "joi";
 
@@ -16,5 +17,12 @@ const validateLogin = (user) => {
   }
 };
 
+const validateAppointment = (appointment) => {
+  if (validator === "joi") {
+    return appointmentValidation(appointment);
+  }
+};
+
 exports.validateRegistration = validateRegistration;
 exports.validateLogin = validateLogin;
+exports.validateAppointment = validateAppointment;
