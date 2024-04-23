@@ -8,6 +8,8 @@ const { auth } = require("../../auth/authService");
 const {
   createAppointment,
   getAppointmentsOfMonth,
+  getAppointmentById,
+  deleteAppointmentById,
 } = require("../../db/appointmentAccessData");
 const { validateAppointment } = require("../../validation/validationService");
 
@@ -32,10 +34,39 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-router.get("/schedule/:id/month/:month/year/:year", auth, async (req, res) => {
+router.delete("/:appointmentId", auth, async (req, res) => {
+  try {
+    const { _id, isExpert } = req.user;
+    const appId = req.params.appointmentId;
+    if (!isExpert)
+      handleClientError(
+        res,
+        403,
+        "You have to be an Expert to delete appointment"
+      );
+    const appFromDB = await getAppointmentById(appId);
+    if (!appFromDB)
+      handleClientError(
+        res,
+        404,
+        `Appointment with id ${appId} not found in DB`
+      );
+    if (_id !== appFromDB.expertId.toString())
+      return handleClientError(res, 403, "Forbidden");
+
+    const deletedAppointment = await deleteAppointmentById(appId);
+    return res.send(deletedAppointment);
+  } catch (error) {
+    handleClientError(res, 500, "didn't success to delete appointment from DB");
+    handleServerError(error);
+  }
+});
+
+router.get("/schedule/:id/:month/:year", auth, async (req, res) => {
   try {
     const { _id, isExpert } = req.user;
     const { id, year, month } = req.params;
+    console.log(req.params);
     if (!isExpert && _id !== id)
       return handleClientError(res, 403, "Access denied");
     const appointments = await getAppointmentsOfMonth(_id, year, month);

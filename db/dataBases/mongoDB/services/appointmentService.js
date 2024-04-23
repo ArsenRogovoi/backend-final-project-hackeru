@@ -42,4 +42,27 @@ const getAppointmentsOfMonthMongo = async (expertId, year, month) => {
   }
 };
 
-module.exports = { createAppointmentMongo, getAppointmentsOfMonthMongo };
+const deleteAppointmentMongo = async (appointmentId) => {
+  try {
+    const deletedApp = await Appointment.findByIdAndDelete(appointmentId);
+    return deletedApp;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getAppointmentByIdMongo = async (_id) => {
+  try {
+    const appointment = await Appointment.findById(_id);
+    return appointment;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = {
+  createAppointmentMongo,
+  getAppointmentsOfMonthMongo,
+  deleteAppointmentMongo,
+  getAppointmentByIdMongo,
+};
