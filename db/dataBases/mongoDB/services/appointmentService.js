@@ -23,6 +23,29 @@ const createAppointmentMongo = async (appointment) => {
   }
 };
 
+const getAppointmentByIdMongo = async (_id) => {
+  try {
+    const appointment = await Appointment.findById(_id);
+    return appointment;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getExpertFreeApptsByDateRangeMongo = async (_id, from, to) => {
+  try {
+    const appointments = await Appointment.find({
+      expertId: _id,
+      isBooked: false,
+      startTime: { $gte: from },
+      endTime: { $lte: to },
+    });
+    return appointments;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const getAppointmentsOfMonthMongo = async (expertId, year, month) => {
   try {
     const startDate = dayjs().year(year).month(month).startOf("month").toDate();
@@ -51,18 +74,10 @@ const deleteAppointmentMongo = async (appointmentId) => {
   }
 };
 
-const getAppointmentByIdMongo = async (_id) => {
-  try {
-    const appointment = await Appointment.findById(_id);
-    return appointment;
-  } catch (error) {
-    throw error;
-  }
-};
-
 module.exports = {
   createAppointmentMongo,
   getAppointmentsOfMonthMongo,
   deleteAppointmentMongo,
   getAppointmentByIdMongo,
+  getExpertFreeApptsByDateRangeMongo,
 };

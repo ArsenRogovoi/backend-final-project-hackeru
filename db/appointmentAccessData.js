@@ -4,6 +4,7 @@ const {
   getAppointmentsOfMonthMongo,
   getAppointmentByIdMongo,
   deleteAppointmentMongo,
+  getExpertFreeApptsByDateRangeMongo,
 } = require("./dataBases/mongoDB/services/appointmentService");
 const DB = config.get("DB");
 
@@ -55,9 +56,25 @@ const deleteAppointmentById = async (_id) => {
   }
 };
 
+const getExpertFreeApptsByDateRange = async (_id, from, to) => {
+  if (DB === "mongoDB") {
+    const appointments = await getExpertFreeApptsByDateRangeMongo(
+      _id,
+      from,
+      to
+    );
+    return appointments;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
 module.exports = {
   createAppointment,
   getAppointmentsOfMonth,
   getAppointmentById,
   deleteAppointmentById,
+  getExpertFreeApptsByDateRange,
 };

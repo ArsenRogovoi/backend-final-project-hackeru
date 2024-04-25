@@ -4,7 +4,7 @@ const key = config.get("JWT_KEY");
 
 const generateAuthTokenJWT = (user) => {
   const { _id, isAdmin, isExpert } = user;
-  const token = jwt.sign({ _id, isAdmin, isExpert }, key, { expiresIn: "1h" });
+  const token = jwt.sign({ _id, isAdmin, isExpert }, key);
   return token;
 };
 

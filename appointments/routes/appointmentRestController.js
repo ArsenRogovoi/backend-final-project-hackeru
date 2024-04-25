@@ -10,9 +10,12 @@ const {
   getAppointmentsOfMonth,
   getAppointmentById,
   deleteAppointmentById,
+  getExpertFreeApptsByDateRange,
 } = require("../../db/appointmentAccessData");
 const { validateAppointment } = require("../../validation/validationService");
+const dayjs = require("dayjs");
 
+// for experts
 router.post("/", auth, async (req, res) => {
   try {
     const { isExpert, _id } = req.user;
@@ -34,6 +37,7 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+// for experts
 router.delete("/:appointmentId", auth, async (req, res) => {
   try {
     const { _id, isExpert } = req.user;
@@ -62,15 +66,29 @@ router.delete("/:appointmentId", auth, async (req, res) => {
   }
 });
 
+// get appts of certain month for expert
 router.get("/schedule/:id/:month/:year", auth, async (req, res) => {
   try {
     const { _id, isExpert } = req.user;
     const { id, year, month } = req.params;
-    console.log(req.params);
     if (!isExpert && _id !== id)
       return handleClientError(res, 403, "Access denied");
     const appointments = await getAppointmentsOfMonth(_id, year, month);
     return res.send(appointments);
+  } catch (error) {
+    handleClientError(res, 500, error);
+    handleServerError(error);
+  }
+});
+
+// get unreserved appts in certain date range for regular user
+router.get("/free-appts/:id/:from/:to", async (req, res) => {
+  try {
+    const { id, from, to } = req.params;
+    const fromDate = dayjs(from).startOf("day").toDate();
+    const toDate = dayjs(to).endOf("day").toDate();
+    const appts = await getExpertFreeApptsByDateRange(id, fromDate, toDate);
+    return res.send(appts);
   } catch (error) {
     handleClientError(res, 500, error);
     handleServerError(error);
