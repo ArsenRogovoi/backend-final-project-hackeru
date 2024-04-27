@@ -5,6 +5,9 @@ const {
   getAppointmentByIdMongo,
   deleteAppointmentMongo,
   getExpertFreeApptsByDateRangeMongo,
+  hasApptsAtThisTimeMongo,
+  hasApptsWithSameExpMongo,
+  bookAppointmentMongo,
 } = require("./dataBases/mongoDB/services/appointmentService");
 const DB = config.get("DB");
 
@@ -71,10 +74,45 @@ const getExpertFreeApptsByDateRange = async (_id, from, to) => {
   }
 };
 
+const hasApptsAtThisTime = async (appt, userId) => {
+  if (DB === "mongoDB") {
+    const hasAppts = await hasApptsAtThisTimeMongo(appt, userId);
+    return hasAppts;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+const hasApptsWithSameExp = async (appt, userId) => {
+  if (DB === "mongoDB") {
+    const hasAppt = await hasApptsWithSameExpMongo(appt, userId);
+    return hasAppt;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
+const bookAppointment = async (appt, user) => {
+  if (DB === "mongoDB") {
+    const bookedAppt = await bookAppointmentMongo(appt, user);
+    return bookedAppt;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
 module.exports = {
   createAppointment,
   getAppointmentsOfMonth,
   getAppointmentById,
   deleteAppointmentById,
   getExpertFreeApptsByDateRange,
+  hasApptsAtThisTime,
+  hasApptsWithSameExp,
+  bookAppointment,
 };

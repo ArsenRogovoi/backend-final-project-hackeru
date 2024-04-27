@@ -11,9 +11,15 @@ const {
   getAppointmentById,
   deleteAppointmentById,
   getExpertFreeApptsByDateRange,
+  hasApptsAtThisTime,
+  hasApptsWithSameExp,
+  bookAppointment,
 } = require("../../db/appointmentAccessData");
 const { validateAppointment } = require("../../validation/validationService");
 const dayjs = require("dayjs");
+const {
+  getUserMongo,
+} = require("../../db/dataBases/mongoDB/services/userService");
 
 // for experts
 router.post("/", auth, async (req, res) => {
@@ -89,6 +95,43 @@ router.get("/free-appts/:id/:from/:to", async (req, res) => {
     const toDate = dayjs(to).endOf("day").toDate();
     const appts = await getExpertFreeApptsByDateRange(id, fromDate, toDate);
     return res.send(appts);
+  } catch (error) {
+    handleClientError(res, 500, error);
+    handleServerError(error);
+  }
+});
+
+// book appointment (user)
+router.put("/:apptId", auth, async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { apptId } = req.params;
+    const appt = await getAppointmentById(apptId);
+    const userFromDB = await getUserMongo(userId);
+    if (!appt)
+      return handleClientError(
+        res,
+        404,
+        "This appointment has not found in DB"
+      );
+    const apptsInSameTime = await hasApptsAtThisTime(appt, userId);
+    if (apptsInSameTime)
+      return handleClientError(
+        res,
+        400,
+        "You alredy has appointments in the same time"
+      );
+    const apptWithSameExp = await hasApptsWithSameExp(appt, userId);
+    if (apptWithSameExp)
+      return handleClientError(
+        res,
+        400,
+        "You already has appointment with this expert"
+      );
+    const bookedAppt = await bookAppointment(appt, userFromDB);
+    if (!bookedAppt)
+      return handleClientError(res, 500, "Failed to book appointment");
+    return res.send(bookedAppt);
   } catch (error) {
     handleClientError(res, 500, error);
     handleServerError(error);

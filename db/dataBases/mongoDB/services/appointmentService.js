@@ -1,5 +1,7 @@
 const dayjs = require("dayjs");
 const { Appointment } = require("../models/appointments/Appointment");
+const utc = require("dayjs/plugin/utc");
+dayjs.extend(utc);
 
 const createAppointmentMongo = async (appointment) => {
   try {
@@ -23,9 +25,44 @@ const createAppointmentMongo = async (appointment) => {
   }
 };
 
-const getAppointmentByIdMongo = async (_id) => {
+const bookAppointmentMongo = async (appt, user) => {
   try {
-    const appointment = await Appointment.findById(_id);
+    const now = dayjs().utc();
+    const { _id: apptId } = appt;
+    const {
+      _id: userId,
+      username: { firstName, lastName },
+    } = user;
+    const updatedAppointment = await Appointment.findOneAndUpdate(
+      {
+        _id: apptId,
+        userId: null,
+        startTime: { $gte: now.toDate() },
+      },
+      {
+        userId: userId,
+        userName: `${firstName} ${lastName}`,
+        isBooked: true,
+      },
+      {
+        new: true,
+      }
+    );
+
+    return updatedAppointment;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// returns only future appointments
+const getAppointmentByIdMongo = async (apptId) => {
+  try {
+    const now = dayjs().utc();
+    const appointment = await Appointment.findOne({
+      _id: apptId,
+      startTime: { $gte: now.toDate() },
+    });
     return appointment;
   } catch (error) {
     throw error;
@@ -74,10 +111,50 @@ const deleteAppointmentMongo = async (appointmentId) => {
   }
 };
 
+const hasApptsAtThisTimeMongo = async (appt, userId) => {
+  try {
+    const now = dayjs().utc();
+    const overlapedAppts = await Appointment.find({
+      userId: userId,
+      $or: [
+        {
+          startTime: { $lt: appt.endTime, $gt: appt.startTime },
+        },
+        {
+          endTime: { $gt: appt.startTime, $lt: appt.endTime },
+        },
+      ],
+      startTime: { $gte: now.toDate() },
+    });
+    if (overlapedAppts.length === 0) return false;
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const hasApptsWithSameExpMongo = async (appt, userId) => {
+  try {
+    const now = dayjs().utc();
+    const overlapedAppts = await Appointment.find({
+      userId: userId,
+      expertId: appt.expertId,
+      startTime: { $gte: now.toDate() },
+    });
+    if (overlapedAppts.length === 0) return false;
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createAppointmentMongo,
   getAppointmentsOfMonthMongo,
   deleteAppointmentMongo,
   getAppointmentByIdMongo,
   getExpertFreeApptsByDateRangeMongo,
+  hasApptsAtThisTimeMongo,
+  hasApptsWithSameExpMongo,
+  bookAppointmentMongo,
 };
