@@ -14,6 +14,7 @@ const appointmentSchema = new Schema(
       ref: "User",
       default: null,
     },
+    expertName: { type: String, default: null },
     userName: { type: String, default: null },
     isBooked: { type: Boolean, default: false },
     startTime: { type: Date, required: true },

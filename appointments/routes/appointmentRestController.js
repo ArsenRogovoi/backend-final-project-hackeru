@@ -20,6 +20,8 @@ const dayjs = require("dayjs");
 const {
   getUserMongo,
 } = require("../../db/dataBases/mongoDB/services/userService");
+const { getUser } = require("../../db/userAccessData");
+const chalk = require("chalk");
 
 // for experts
 router.post("/", auth, async (req, res) => {
@@ -32,13 +34,23 @@ router.post("/", auth, async (req, res) => {
         "You have to be an Expert to create appointment"
       );
     const appointment = req.body;
+    const expertFromDB = await getUser(_id);
     appointment.expertId = _id;
+    appointment.expertName = `${expertFromDB.username.firstName} ${expertFromDB.username.lastName}`;
     const error = validateAppointment(appointment);
     if (error) return handleClientError(res, 400, `Validation Error: ${error}`);
     const savedApp = await createAppointment(appointment);
     return res.send(savedApp);
   } catch (error) {
-    handleClientError(res, 500, "didn't success to save appointment in DB");
+    if (error.message === "There is another appointment in this time") {
+      return handleClientError(
+        res,
+        409,
+        "You already have appointment at this time"
+      );
+    } else {
+      handleClientError(res, 500, "Failed to save appointment in DB");
+    }
     handleServerError(error);
   }
 });

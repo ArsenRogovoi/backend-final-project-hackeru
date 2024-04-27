@@ -10,8 +10,8 @@ const createAppointmentMongo = async (appointment) => {
     const overlapedApps = await Appointment.find({
       expertId: expertId,
       $or: [
-        { startTime: { $gt: st, $lt: et } },
-        { endTime: { $gt: st, $lt: et } },
+        { startTime: { $gte: st, $lt: et } },
+        { endTime: { $gt: st, $lte: et } },
         { startTime: { $lt: st }, endTime: { $gt: et } },
       ],
     });

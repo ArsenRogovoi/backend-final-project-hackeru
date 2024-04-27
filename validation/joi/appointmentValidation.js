@@ -4,7 +4,8 @@ const appointmentValidation = (appointment) => {
   const schema = Joi.object({
     expertId: Joi.string().required(),
     userId: Joi.string(),
-    username: Joi.string(),
+    userName: Joi.string(),
+    expertName: Joi.string(),
     isBooked: Joi.boolean(),
     startTime: Joi.date().iso().required(),
     endTime: Joi.date().iso().required(),
