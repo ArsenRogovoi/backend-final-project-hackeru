@@ -148,6 +148,33 @@ const hasApptsWithSameExpMongo = async (appt, userId) => {
   }
 };
 
+const getMyBookedApptsMongo = async (userId) => {
+  try {
+    const now = dayjs().utc();
+    const appts = await Appointment.find({
+      startTime: { $gte: now.toDate() },
+      isBooked: true,
+      userId: userId,
+    });
+    return appts;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const userCancelApptMongo = async (apptId) => {
+  try {
+    const appt = await Appointment.findByIdAndUpdate(apptId, {
+      isBooked: false,
+      userId: null,
+      userName: null,
+    });
+    return appt;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   createAppointmentMongo,
   getAppointmentsOfMonthMongo,
@@ -157,4 +184,6 @@ module.exports = {
   hasApptsAtThisTimeMongo,
   hasApptsWithSameExpMongo,
   bookAppointmentMongo,
+  getMyBookedApptsMongo,
+  userCancelApptMongo,
 };

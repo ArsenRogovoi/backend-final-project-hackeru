@@ -8,6 +8,8 @@ const {
   hasApptsAtThisTimeMongo,
   hasApptsWithSameExpMongo,
   bookAppointmentMongo,
+  getMyBookedApptsMongo,
+  userCancelApptMongo,
 } = require("./dataBases/mongoDB/services/appointmentService");
 const DB = config.get("DB");
 
@@ -84,6 +86,7 @@ const hasApptsAtThisTime = async (appt, userId) => {
     );
   }
 };
+
 const hasApptsWithSameExp = async (appt, userId) => {
   if (DB === "mongoDB") {
     const hasAppt = await hasApptsWithSameExpMongo(appt, userId);
@@ -106,6 +109,28 @@ const bookAppointment = async (appt, user) => {
   }
 };
 
+const getMyBookedAppts = async (userId) => {
+  if (DB === "mongoDB") {
+    const appts = await getMyBookedApptsMongo(userId);
+    return appts;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
+const userCancelAppt = async (apptId) => {
+  if (DB === "mongoDB") {
+    const appt = await userCancelApptMongo(apptId);
+    return appt;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
 module.exports = {
   createAppointment,
   getAppointmentsOfMonth,
@@ -115,4 +140,6 @@ module.exports = {
   hasApptsAtThisTime,
   hasApptsWithSameExp,
   bookAppointment,
+  getMyBookedAppts,
+  userCancelAppt,
 };

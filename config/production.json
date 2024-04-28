@@ -8,5 +8,5 @@
   "DB_PASSWORD": "",
   "LOGGER": "morgan",
   "VALIDATION": "joi",
-  "CORS_ORIGIN": "http://localhost:3000"
+  "CORS_ORIGIN": "*"
 }

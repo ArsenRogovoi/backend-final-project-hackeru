@@ -14,6 +14,8 @@ const {
   hasApptsAtThisTime,
   hasApptsWithSameExp,
   bookAppointment,
+  getMyBookedAppts,
+  userCancelAppt,
 } = require("../../db/appointmentAccessData");
 const { validateAppointment } = require("../../validation/validationService");
 const dayjs = require("dayjs");
@@ -113,6 +115,17 @@ router.get("/free-appts/:id/:from/:to", async (req, res) => {
   }
 });
 
+router.get("/my-appts", auth, async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const bookedAppts = await getMyBookedAppts(_id);
+    return res.send(bookedAppts);
+  } catch (error) {
+    handleClientError(res, 500, error);
+    handleServerError(error);
+  }
+});
+
 // book appointment (user)
 router.put("/:apptId", auth, async (req, res) => {
   try {
@@ -144,6 +157,23 @@ router.put("/:apptId", auth, async (req, res) => {
     if (!bookedAppt)
       return handleClientError(res, 500, "Failed to book appointment");
     return res.send(bookedAppt);
+  } catch (error) {
+    handleClientError(res, 500, error);
+    handleServerError(error);
+  }
+});
+
+router.put("/cancel-appt/:apptId", auth, async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const apptId = req.params.apptId;
+    const apptFromDB = await getAppointmentById(apptId);
+    if (!apptFromDB)
+      handleClientError(res, 400, "Appointment has not found in DB");
+    if (apptFromDB.userId.toString() !== _id)
+      handleClientError(res, 403, "This appointment has not your data");
+    const canceledAppt = await userCancelAppt(apptId);
+    return res.send(canceledAppt);
   } catch (error) {
     handleClientError(res, 500, error);
     handleServerError(error);
