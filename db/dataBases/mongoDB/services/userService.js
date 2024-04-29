@@ -92,6 +92,16 @@ const getExpertMongo = async (id) => {
   }
 };
 
+const likeExpert = async (userId, expertId) => {
+  try {
+    const user = await User.findByIdAndUpdate(userId, {
+      favExperts: 
+    })
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   loginUserMongo,
   registerUserMongo,

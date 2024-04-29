@@ -19,7 +19,7 @@ const {
 } = require("../../db/userAccessData");
 const chalk = require("chalk");
 
-// registrarion endpoint
+// registrarion
 router.post("/", async (req, res) => {
   try {
     const error = validateRegistration(req.body);
@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// login endpoint
+// login
 router.post("/login", async (req, res) => {
   try {
     const error = validateLogin(req.body);
@@ -50,13 +50,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
-//get user endpoint
+//get user
 router.get("/userInfo/:id", auth, async (req, res) => {
   try {
     const requestedUserId = req.params.id;
     const { _id, isAdmin } = req.user;
     if (_id !== requestedUserId && !isAdmin)
-      handleClientError(
+      return handleClientError(
         res,
         403,
         "The client does not have access rights to the content"
@@ -104,6 +104,16 @@ router.get("/experts/:id", async (req, res) => {
     const expertId = req.params.id;
     const expert = await getExpert(expertId);
     return res.send(expert);
+  } catch (error) {
+    handleClientError(res, 500, "didn't success to get expert from DB");
+    handleServerError(error);
+  }
+});
+
+router.put("/like-expert/:expertId", auth, async (req, res) => {
+  try {
+    const { _id: userId } = req.user;
+    const { expertId } = req.params;
   } catch (error) {
     handleClientError(res, 500, "didn't success to get expert from DB");
     handleServerError(error);
