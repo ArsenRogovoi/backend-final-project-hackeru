@@ -16,6 +16,7 @@ const {
   getUsers,
   getExperts,
   getExpert,
+  likeExpert,
 } = require("../../db/userAccessData");
 const chalk = require("chalk");
 
@@ -114,7 +115,14 @@ router.put("/like-expert/:expertId", auth, async (req, res) => {
   try {
     const { _id: userId } = req.user;
     const { expertId } = req.params;
+    const updatedUser = await likeExpert(userId, expertId);
+    if (!updatedUser)
+      return handleClientError(res, 500, "Failed to like expert");
+    res.send(updatedUser);
   } catch (error) {
+    if (error.message === "User not found") {
+      handleClientError(res, 400, "User with whis id not found");
+    }
     handleClientError(res, 500, "didn't success to get expert from DB");
     handleServerError(error);
   }

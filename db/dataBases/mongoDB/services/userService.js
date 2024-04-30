@@ -92,15 +92,25 @@ const getExpertMongo = async (id) => {
   }
 };
 
-const likeExpert = async (userId, expertId) => {
+const likeExpertMongo = async (userId, expertId) => {
   try {
-    const user = await User.findByIdAndUpdate(userId, {
-      favExperts: 
-    })
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const updateOperation = user.favExperts.includes(expertId)
+      ? { $pull: { favExperts: expertId } }
+      : { $addToSet: { favExperts: expertId } };
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateOperation, {
+      new: true,
+    });
+    return updatedUser;
   } catch (error) {
     throw error;
   }
-}
+};
 
 module.exports = {
   loginUserMongo,
@@ -109,4 +119,5 @@ module.exports = {
   getUsersMongo,
   getExpertsMongo,
   getExpertMongo,
+  likeExpertMongo,
 };

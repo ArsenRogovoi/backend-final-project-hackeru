@@ -7,6 +7,7 @@ const {
   getUsersMongo,
   getExpertsMongo,
   getExpertMongo,
+  likeExpertMongo,
 } = require("./dataBases/mongoDB/services/userService");
 const { handleServerError } = require("../utils/errorHandlers");
 
@@ -88,6 +89,17 @@ const getExpert = async (id) => {
   }
 };
 
+const likeExpert = async (userId, expertId) => {
+  if (DB === "mongoDB") {
+    const updatedUser = await likeExpertMongo(userId, expertId);
+    return updatedUser;
+  } else {
+    handleServerError(
+      "Currently only the MongoDB is supported. Please check your DB property in config files."
+    );
+  }
+};
+
 module.exports = {
   loginUser,
   registerUser,
@@ -95,4 +107,5 @@ module.exports = {
   getUsers,
   getExperts,
   getExpert,
+  likeExpert,
 };
