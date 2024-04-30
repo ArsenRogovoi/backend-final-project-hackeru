@@ -8,6 +8,7 @@ const { auth } = require("../../auth/authService");
 const {
   validateLogin,
   validateRegistration,
+  validateUpdateUser,
 } = require("../../validation/validationService");
 const {
   loginUser,
@@ -17,6 +18,7 @@ const {
   getExperts,
   getExpert,
   likeExpert,
+  updateUser,
 } = require("../../db/userAccessData");
 const chalk = require("chalk");
 
@@ -28,7 +30,6 @@ router.post("/", async (req, res) => {
     const user = await registerUser(req.body);
     return res.send(user);
   } catch (error) {
-    console.log(chalk.magenta(error.name));
     if (error.name === "EmailAlreadyExistsError") {
       handleClientError(res, 400, error.message);
     } else {
@@ -128,7 +129,22 @@ router.put("/like-expert/:expertId", auth, async (req, res) => {
   }
 });
 
-//edit user
+// update user:
+router.put("/", auth, async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const updateObj = req.body;
+    const error = validateUpdateUser(updateObj);
+    if (error) return handleClientError(res, 400, `Validation Error: ${error}`);
+    const updatedUser = await updateUser(_id, updateObj);
+    res.send(updatedUser);
+  } catch (error) {
+    if (error.message === "Failed to update user")
+      return handleClientError(res, 500, "Failed to update user");
+    handleClientError(res, 500, "didn't success to get expert from DB");
+    handleServerError(error);
+  }
+});
 
 //delete user
 

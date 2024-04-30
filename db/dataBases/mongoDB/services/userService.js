@@ -3,6 +3,10 @@ const { User } = require("../models/users/User");
 const hashPassword = require("../../../../bcrypt/hashPassword");
 const checkPassword = require("../../../../bcrypt/checkPassword");
 const { generateAuthToken } = require("../../../../auth/authService");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const { Appointment } = require("../models/appointments/Appointment");
+dayjs.extend(utc);
 
 // searches user in DB and returns auth token!
 const loginUserMongo = async (user) => {
@@ -112,6 +116,40 @@ const likeExpertMongo = async (userId, expertId) => {
   }
 };
 
+const updateUserMongo = async (userId, updateObj) => {
+  const updQ = updateObj.isExpert
+    ? {
+        username: updateObj.username,
+        email: updateObj.email,
+        address: updateObj.address,
+        bio: updateObj.bio,
+        specialization: updateObj.specialization,
+        contactPhone: updateObj.contactPhone,
+      }
+    : { username: updateObj.username, email: updateObj.email };
+  try {
+    const now = dayjs().utc();
+    const updatedUser = await User.findByIdAndUpdate(userId, updQ, {
+      new: true,
+    });
+    if (!updatedUser) throw new Error("Failed to update user");
+
+    await Appointment.updateMany(
+      {
+        startTime: { $gte: now },
+        userId: userId,
+      },
+      {
+        userName: `${updatedUser.username.firstName} ${updatedUser.username.lastName}`,
+      }
+    );
+
+    return updatedUser;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   loginUserMongo,
   registerUserMongo,
@@ -120,4 +158,5 @@ module.exports = {
   getExpertsMongo,
   getExpertMongo,
   likeExpertMongo,
+  updateUserMongo,
 };
