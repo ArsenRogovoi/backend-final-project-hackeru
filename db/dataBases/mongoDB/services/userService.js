@@ -134,15 +134,19 @@ const updateUserMongo = async (userId, updateObj) => {
     });
     if (!updatedUser) throw new Error("Failed to update user");
 
-    await Appointment.updateMany(
-      {
-        startTime: { $gte: now },
-        userId: userId,
-      },
-      {
-        userName: `${updatedUser.username.firstName} ${updatedUser.username.lastName}`,
-      }
-    );
+    // updating appointments related to user
+    const fQ = updatedUser.isExpert
+      ? { startTime: { $gte: now }, expertId: updatedUser._id }
+      : { startTime: { $gte: now }, userId: updatedUser._id };
+
+    const upd = updatedUser.isExpert
+      ? {
+          expertName: `${updatedUser.username.firstName} ${updatedUser.username.lastName}`,
+        }
+      : {
+          userName: `${updatedUser.username.firstName} ${updatedUser.username.lastName}`,
+        };
+    await Appointment.updateMany(fQ, upd);
 
     return updatedUser;
   } catch (error) {
