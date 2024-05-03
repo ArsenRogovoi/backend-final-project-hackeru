@@ -71,10 +71,11 @@ const getAppointmentByIdMongo = async (apptId) => {
 
 const getExpertFreeApptsByDateRangeMongo = async (_id, from, to) => {
   try {
+    const now = dayjs().utc().toDate();
     const appointments = await Appointment.find({
       expertId: _id,
       isBooked: false,
-      startTime: { $gte: from },
+      startTime: { $gte: from, $gte: now },
       endTime: { $lte: to },
     });
     return appointments;

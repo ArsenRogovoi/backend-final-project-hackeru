@@ -11,7 +11,6 @@ const corsConfig = config.get("CORS_ORIGIN");
 
 app.use(logger);
 app.use(express.json());
-// it will be better if there will be some error handler for cors:
 app.use(
   cors({
     origin: corsConfig,

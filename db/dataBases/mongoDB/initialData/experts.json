@@ -1,0 +1,75 @@
+[
+  {
+    "username": {
+      "firstName": "Alex",
+      "lastName": "Smith"
+    },
+    "email": "alexsmith@example.com",
+    "password": "Aa!12345",
+    "isExpert": true,
+    "specialization": "Business Consulting, Strategic Planning",
+    "bio": "Experienced business consultant with over 10 years in the industry.",
+    "contactPhone": "0533333333",
+    "address": {
+      "country": "France",
+      "city": "Paris",
+      "street": "Champs-Élysées",
+      "houseNum": "100"
+    }
+  },
+  {
+    "username": {
+      "firstName": "Emily",
+      "lastName": "Johnson"
+    },
+    "email": "emilyjohnson@example.com",
+    "password": "Aa!12345",
+    "isExpert": true,
+    "specialization": "Software Architecture, Public Speaking",
+    "bio": "Renowned software architect and speaker at various tech conferences.",
+    "contactPhone": "0533333333",
+    "address": {
+      "country": "Germany",
+      "city": "Berlin",
+      "street": "Unter den Linden",
+      "houseNum": "5"
+    }
+  },
+
+  {
+    "username": {
+      "firstName": "Olivia",
+      "lastName": "Martinez"
+    },
+    "email": "oliviamartinez@example.com",
+    "password": "Aa!12345",
+    "isExpert": true,
+    "specialization": "Nutrition, Sustainable Eating",
+    "bio": "Dedicated nutritionist with a focus on sustainable eating habits.",
+    "contactPhone": "0533333333",
+    "address": {
+      "country": "Spain",
+      "city": "Barcelona",
+      "street": "Passeig de Gracia",
+      "houseNum": "50"
+    }
+  },
+  {
+    "username": {
+      "firstName": "Ethan",
+      "lastName": "Wilson"
+    },
+    "email": "ethanwilson@example.com",
+    "password": "Aa!12345",
+    "isExpert": true,
+    "specialization": "Startup Growth, Angel Investing",
+    "bio": "Tech entrepreneur and angel investor with a passion for startups.",
+    "contactPhone": "0533333333",
+    "address": {
+      "country": "India",
+      "city": "Mumbai",
+      "street": "Bandra West",
+      "houseNum": "75"
+    }
+  }
+]
